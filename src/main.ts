@@ -13,7 +13,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Search API')
     .setDescription('The cats API description')
-    .setVersion('1.0.0')
+    .setVersion(process.env.VERSION)
     .build();
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
