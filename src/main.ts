@@ -1,8 +1,8 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app/app.module';
+import { AppModule } from 'app/app.module';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(
@@ -17,6 +17,7 @@ async function bootstrap() {
     .build();
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(``, app, document, {
@@ -27,6 +28,6 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(8000, `0.0.0.0`);
+  await app.listen(8000);
 }
 bootstrap();

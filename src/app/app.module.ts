@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HttpModule } from '@nestjs/axios';
 
+const CACHE_TTL = 60 * 60 * 24;
+
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, CacheModule.register({ ttl: CACHE_TTL })],
   controllers: [AppController],
   providers: [AppService],
 })
