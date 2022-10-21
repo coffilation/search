@@ -12,7 +12,6 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Search API')
-    .setDescription('The cats API description')
     .setVersion(process.env.VERSION)
     .build();
 
