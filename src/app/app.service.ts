@@ -3,6 +3,7 @@ import { Cache } from 'cache-manager';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { Place } from 'app/entities/place.entity';
+import { FastifyRequest } from 'fastify';
 
 const defaultParams = {
   format: `jsonv2`,
@@ -18,7 +19,7 @@ export class AppService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async fetchDataWithCache(query: string): Promise<Place[]> {
+  async fetchDataWithCache(query: string, referer?: string): Promise<Place[]> {
     const cache = await this.cacheManager.get<Place[] | undefined>(query);
 
     if (cache) {
@@ -30,6 +31,7 @@ export class AppService {
         `https://nominatim.openstreetmap.org/search`,
         {
           params: { q: query, ...defaultParams },
+          headers: { referer },
         },
       ),
     );
@@ -39,8 +41,8 @@ export class AppService {
     return data;
   }
 
-  async search(query: string): Promise<Place[]> {
-    return (await this.fetchDataWithCache(query)).map(
+  async search(query: string, request: FastifyRequest): Promise<Place[]> {
+    return (await this.fetchDataWithCache(query, request.headers.referer)).map(
       (entity) => new Place(entity),
     );
   }
