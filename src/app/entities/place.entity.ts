@@ -110,7 +110,8 @@ export class Place {
   @ExposeNameWithApi(`osmId`)
   osm_id: number;
 
-  @ExposeNameWithApi(`boundingBox`)
+  @ApiHideProperty()
+  @Exclude()
   boundingbox: string[];
 
   @ExposeNameWithApi(`displayName`)
