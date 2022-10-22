@@ -96,7 +96,8 @@ export class Place {
     return this.address[this.category];
   }
 
-  @ExposeNameWithApi(`placeOsmId`)
+  @ApiHideProperty()
+  @Exclude()
   place_id: number;
 
   @ApiHideProperty()
