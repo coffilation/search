@@ -116,6 +116,12 @@ export class Place {
   @ExposeNameWithApi(`displayName`)
   display_name: string;
 
+  @ExposeNameWithApi(`latitude`)
+  lat: string;
+
+  @ExposeNameWithApi(`longitude`)
+  lon: string;
+
   @ApiHideProperty()
   @Exclude()
   place_rank: number;
@@ -128,8 +134,6 @@ export class Place {
   @Exclude()
   icon: string;
 
-  lat: string;
-  lon: string;
   category: string;
   type: string;
 
