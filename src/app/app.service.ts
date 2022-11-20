@@ -53,6 +53,12 @@ export class AppService {
     { osmType, osmId, category }: LookupQueryDto,
     request: FastifyRequest,
   ) {
+    const headers: Record<string, string> = {};
+
+    if (request.headers.referer) {
+      headers.referer = request.headers.referer;
+    }
+
     const { data } = await lastValueFrom(
       this.httpService.get<Place[]>(
         `https://nominatim.openstreetmap.org/lookup`,
@@ -61,7 +67,7 @@ export class AppService {
             osm_ids: `${this.osmTypeToPrefix[osmType]}${osmId}`,
             ...defaultFindOneParams,
           },
-          headers: { referer: request.headers.referer },
+          headers,
         },
       ),
     );
