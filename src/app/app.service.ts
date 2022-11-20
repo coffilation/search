@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { Place } from 'app/entities/place.entity';
@@ -49,9 +49,12 @@ export class AppService {
 
   private osmTypeToPrefix = { node: `N`, way: `W`, relation: `R` };
 
-  async lookup({ osmType, osmId }: LookupQueryDto, request: FastifyRequest) {
+  async lookup(
+    { osmType, osmId, category }: LookupQueryDto,
+    request: FastifyRequest,
+  ) {
     const { data } = await lastValueFrom(
-      this.httpService.get<Place>(
+      this.httpService.get<Place[]>(
         `https://nominatim.openstreetmap.org/lookup`,
         {
           params: {
@@ -63,6 +66,12 @@ export class AppService {
       ),
     );
 
-    return new Place(data[0]);
+    const place = data.find((place) => place.category === category);
+
+    if (!place) {
+      throw new NotFoundException();
+    }
+
+    return new Place(place);
   }
 }

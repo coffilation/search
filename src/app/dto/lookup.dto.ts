@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber } from 'class-validator';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export enum OSMType {
@@ -14,4 +14,7 @@ export class LookupQueryDto {
   @IsNumber()
   @Type(() => Number)
   osmId: number;
+
+  @IsString()
+  category: string;
 }
