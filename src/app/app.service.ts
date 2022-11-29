@@ -28,12 +28,18 @@ export class AppService {
     query: SearchQueryDto,
     referer?: string,
   ): Promise<Place[]> {
+    const headers: Record<string, string> = {};
+
+    if (referer) {
+      headers.referer = referer;
+    }
+
     const { data } = await lastValueFrom(
       this.httpService.get<Place[]>(
         `https://nominatim.openstreetmap.org/search`,
         {
           params: { ...query, ...defaultParams },
-          headers: { referer },
+          headers,
         },
       ),
     );
